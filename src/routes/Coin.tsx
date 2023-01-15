@@ -187,7 +187,7 @@ function Coin() {
     <Container>
       <Header>
         <Title>
-        <Img src={`https://coinicons-api.vercel.app/api/icon/${state.icon}`}/>
+        <Img src={`https://coinicons-api.vercel.app/api/icon/${state?.icon}`}/>
           {state?.name ? state.name : loading ? "Loading....." : infoData?.name}
         </Title>
       </Header>
@@ -235,7 +235,7 @@ function Coin() {
               <Price />
             </Route>
             <Route path={`/${coinId}/chart`}>
-              <Chart />
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </>
