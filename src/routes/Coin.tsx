@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Switch, Route, useLocation, useParams, Link, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import Chart from "./Chart";
 import Price from "./Price";
 
@@ -149,39 +151,44 @@ const Img = styled.img`
 `
 
 function Coin() {
+  /*   
   const [loading, setLoading] = useState(true);
+  const [info, setInfo] = useState<IInfoData>();
+  const [priceInfo, setPriceInfo] = useState<IPriceData>(); 
+  */
   const { coinId } = useParams<ParamsProp>();
   const { state } = useLocation<RouteState>(); // useLocation : ReactRouterDom이 보내주는 것
-  const [info, setInfo] = useState<IInfoData>();
-  const [priceInfo, setPriceInfo] = useState<IPriceData>();
   const priceMatch = useRouteMatch("/:coinId/price");
   const chartMatch = useRouteMatch("/:coinId/chart");
+  const {isLoading: infoLoading ,data:infoData} = useQuery<IInfoData>(["info",coinId], () => fetchCoinInfo(coinId))
+  const {isLoading: tickersLoading, data:tickersData} = useQuery<IPriceData>(["tickers",coinId], () => fetchCoinTickers(coinId))
 
-
-  useEffect(() => {
-    (async () => {
-      const infoData = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-      ).json();
-      // console.log(infoData);
-      /* const response = await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-        const json = await response.json() 
-        위의 코드와 동일하다.*/
-      const priceData = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-      ).json();
-      setInfo(infoData);
-      setPriceInfo(priceData);
-      setLoading(false);
-      // console.log(priceData);
-    })();
-  }, [coinId]);
+  // useEffect(() => {
+  //   (async () => {
+  //     const infoData = await (
+  //       await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
+  //     ).json();
+  //     // console.log(infoData);
+  //     /* const response = await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
+  //       const json = await response.json() 
+  //       위의 코드와 동일하다.*/
+  //     const priceData = await (
+  //       await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
+  //     ).json();
+  //     setInfo(infoData);
+  //     setPriceInfo(priceData);
+  //     setLoading(false);
+  //     // console.log(priceData);
+  //   })();
+  // }, [coinId]);
+  
+  const loading = infoLoading || tickersLoading
   return (
     <Container>
       <Header>
         <Title>
         <Img src={`https://coinicons-api.vercel.app/api/icon/${state.icon}`}/>
-          {state?.name ? state.name : loading ? "Loading....." : info?.name}
+          {state?.name ? state.name : loading ? "Loading....." : infoData?.name}
         </Title>
       </Header>
       {loading ? (
@@ -191,26 +198,26 @@ function Coin() {
           <Overview>
             <OverviewItem>
               <span>Rank:</span>
-              <span>{info?.rank}</span>
+              <span>{infoData?.rank}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Symbol:</span>
-              <span>{info?.symbol}</span>
+              <span>{infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Open Source:</span>
-              <span>{info?.open_source}</span>
+              <span>{infoData?.open_source}</span>
             </OverviewItem>
           </Overview>
-          <Description>{info?.description}</Description>
+          <Description>{infoData?.description}</Description>
           <Overview>
             <OverviewItem>
               <span>Total Supply;</span>
-              <span>{priceInfo?.total_supply}</span>
+              <span>{tickersData?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Max Supply;</span>
-              <span>{priceInfo?.max_supply}</span>
+              <span>{tickersData?.max_supply}</span>
             </OverviewItem>
           </Overview>
 
