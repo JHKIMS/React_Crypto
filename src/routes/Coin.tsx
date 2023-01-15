@@ -9,6 +9,7 @@ interface ParamsProp {
 }
 interface RouteState {
   name: string;
+  icon: string;
 }
 
 interface ITag {
@@ -141,6 +142,12 @@ const Tab = styled.span<{ isActive: boolean}>`
   }
 `;
 
+const Img = styled.img`
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+`
+
 function Coin() {
   const [loading, setLoading] = useState(true);
   const { coinId } = useParams<ParamsProp>();
@@ -173,6 +180,7 @@ function Coin() {
     <Container>
       <Header>
         <Title>
+        <Img src={`https://coinicons-api.vercel.app/api/icon/${state.icon}`}/>
           {state?.name ? state.name : loading ? "Loading....." : info?.name}
         </Title>
       </Header>
