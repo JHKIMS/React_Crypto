@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -32,8 +32,25 @@ const Loader = styled.span`
 function Coin(){
     const [loading, setLoading] = useState(true);
     const {coinId} = useParams<ParamsProp>();
-    const {state} = useLocation<RouteState>();
-    // useLocation : ReactRouterDom이 보내주는 것
+    const {state} = useLocation<RouteState>();// useLocation : ReactRouterDom이 보내주는 것
+    const [info, setInfo] = useState({});
+    const [priceInfo, setPriceInfo] = useState({});
+
+    useEffect(()=>{
+      (async()=>{
+        const infoData = await(
+          await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
+        ).json();
+        /* const response = await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
+        const json = await response.json() 
+        위의 코드와 동일하다.*/
+        const priceData = await(
+          await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
+        ).json();
+        setInfo(infoData);
+        setPriceInfo(priceData);
+      })()
+    }, [])
     return (
     <Container>
       <Header>
