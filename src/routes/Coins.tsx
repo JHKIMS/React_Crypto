@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoins } from "../api";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -63,7 +65,8 @@ const Loader = styled.span`
 `
 
 function Coins() {
-  const [coins, setCoins] = useState<CoinInterface[]>([]);
+  const {isLoading, data} = useQuery<CoinInterface[]>("allCoins", fetchCoins)
+/*   const [coins, setCoins] = useState<CoinInterface[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
@@ -72,16 +75,16 @@ function Coins() {
       setCoins(json.slice(0, 100));
       setLoading(false);
     })();
-  }, []);
+  }, []); */
 
   return (
     <Container>
       <Header>
         <Title>Crypto Tracker</Title>
       </Header>
-      {loading ? (<Loader>Loading...</Loader>) : (
+      {isLoading ? (<Loader>Loading...</Loader>) : (
       <CoinsList>
-        {coins.map((coin) => (
+        {data?.slice(0,10).map((coin) => (
           <Coin key={coin.id}>
             <Link to={{
               pathname: `/${coin.id}`,
