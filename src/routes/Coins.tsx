@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -42,7 +43,7 @@ const Img = styled.img`
   width: 35px;
   height: 35px;
   margin-right: 10px;
-`
+`;
 
 interface CoinInterface {
   id: string;
@@ -62,11 +63,11 @@ const Title = styled.h1`
 const Loader = styled.span`
   text-align: center;
   display: block;
-`
+`;
 
 function Coins() {
-  const {isLoading, data} = useQuery<CoinInterface[]>("allCoins", fetchCoins)
-/*   const [coins, setCoins] = useState<CoinInterface[]>([]);
+  const { isLoading, data } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
+  /*   const [coins, setCoins] = useState<CoinInterface[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
@@ -79,24 +80,33 @@ function Coins() {
 
   return (
     <Container>
+      <Helmet>
+        <title>Crypto Tracker</title>
+      </Helmet>
       <Header>
         <Title>Crypto Tracker</Title>
       </Header>
-      {isLoading ? (<Loader>Loading...</Loader>) : (
-      <CoinsList>
-        {data?.slice(0,10).map((coin) => (
-          <Coin key={coin.id}>
-            <Link to={{
-              pathname: `/${coin.id}`,
-              state: {name: coin.name, icon: coin.symbol.toLowerCase()},
-            }}>
-                <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}/>
+      {isLoading ? (
+        <Loader>Loading...</Loader>
+      ) : (
+        <CoinsList>
+          {data?.slice(0, 10).map((coin) => (
+            <Coin key={coin.id}>
+              <Link
+                to={{
+                  pathname: `/${coin.id}`,
+                  state: { name: coin.name, icon: coin.symbol.toLowerCase() },
+                }}
+              >
+                <Img
+                  src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
+                />
                 {coin.name} &rarr;
-            </Link>
-          </Coin>
-        ))}
-      </CoinsList>
-    )}
+              </Link>
+            </Coin>
+          ))}
+        </CoinsList>
+      )}
     </Container>
   );
 }
