@@ -45,16 +45,6 @@ const Img = styled.img`
   margin-right: 10px;
 `;
 
-interface CoinInterface {
-  id: string;
-  name: string;
-  symbol: string;
-  rank: number;
-  is_new: boolean;
-  is_active: boolean;
-  type: string;
-}
-
 const Title = styled.h1`
   font-size: 48px;
   color: ${(props) => props.theme.accentColor};
@@ -65,7 +55,21 @@ const Loader = styled.span`
   display: block;
 `;
 
-function Coins() {
+interface CoinInterface {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  is_new: boolean;
+  is_active: boolean;
+  type: string;
+}
+
+interface ICoinsProps{
+  toggleDark: () => void;
+}
+
+function Coins({toggleDark}:ICoinsProps) {
   const { isLoading, data } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
   /*   const [coins, setCoins] = useState<CoinInterface[]>([]);
   const [loading, setLoading] = useState(true);
@@ -85,6 +89,7 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>Crypto Tracker</Title>
+        <button onClick={toggleDark}>Button</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>

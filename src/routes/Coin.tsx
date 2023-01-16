@@ -78,6 +78,10 @@ interface IPriceData {
   };
 }
 
+interface ICoinProps{
+  isDark: boolean;
+}
+
 const Container = styled.div`
   padding: 0px 20px;
   max-width: 480px;
@@ -151,7 +155,7 @@ const Img = styled.img`
   margin-right: 10px;
 `
 
-function Coin() {
+function Coin({isDark}:ICoinProps) {
   /*   
   const [loading, setLoading] = useState(true);
   const [info, setInfo] = useState<IInfoData>();
@@ -247,7 +251,7 @@ function Coin() {
               <Price />
             </Route>
             <Route path={`/${coinId}/chart`}>
-              <Chart coinId={coinId} />
+              <Chart isDark={isDark} coinId={coinId} />
             </Route>
           </Switch>
         </>
