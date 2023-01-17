@@ -64,12 +64,10 @@ a{
 `;
 
 function App() {
-  const [isDark, setIsDark] = useState(false);
-  const toggleDark = () => setIsDark((nowMode) => !nowMode);
   return (
     <>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <Router isDark={isDark} toggleDark={toggleDark}/>
+        <Router/>
         <GlobalStyle />
         <ReactQueryDevtools initialIsOpen={true} />
       </ThemeProvider>
