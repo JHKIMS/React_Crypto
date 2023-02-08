@@ -154,6 +154,12 @@ const Img = styled.img`
   height: 40px;
   margin-right: 10px;
 `
+const HomeButton = styled(Link)`
+  display: flex;
+  justify-content: flex-start;
+  font-size: 20px;
+  color: ${(props) =>props.theme.accentColor};
+`
 
 function Coin({}:ICoinProps) {
   /*   
@@ -201,6 +207,7 @@ function Coin({}:ICoinProps) {
           {state?.name ? state.name : loading ? "Loading....." : infoData?.name}
         </title>
       </Helmet>
+      <HomeButton to={'/'}>🏠HOME</HomeButton>
       <Header>
         <Title>
         <Img src={`https://coinicons-api.vercel.app/api/icon/${state?.icon}`}/>
