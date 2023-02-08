@@ -61,15 +61,14 @@ const ToggleButton = styled.button`
   z-index: 999999;
   bottom: 4%;
   right: 3%;
-  background-color: ${props => props.theme.bgColor};
-  display: flex;
-  justify-content: center;
+  background-color: ${(props) => props.theme.bgColor};
+  border: ${(props) => props.theme.borderColor};
   align-items: center;
   width: 96px;
   height: 48px;
   border-radius: 30px;
   font-size: 20px;
-`
+`;
 
 interface CoinInterface {
   id: string;
@@ -81,17 +80,12 @@ interface CoinInterface {
   type: string;
 }
 
-interface ICoinsProps{
-}
+interface ICoinsProps {}
 
-interface TogName{
-  name: string;
-}
-
-function Coins({}:ICoinsProps) {
+function Coins({}: ICoinsProps) {
   const isToggle = useRecoilValue(isDarkAtom);
-  const setDarkAtom = useSetRecoilState(isDarkAtom)
-  const toggleDarkAtom = () => setDarkAtom(prevToggle=> !prevToggle);
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prevToggle) => !prevToggle);
   const { isLoading, data } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
   /*   const [coins, setCoins] = useState<CoinInterface[]>([]);
   const [loading, setLoading] = useState(true);
@@ -111,10 +105,10 @@ function Coins({}:ICoinsProps) {
       </Helmet>
       <Header>
         <Title>Crypto Tracker</Title>
-          <button onClick={toggleDarkAtom}>
-              {isToggle ? "🌝":"🌚"}
-          </button>
-          <ToggleButton onClick={toggleDarkAtom} />  
+        {/* <button onClick={toggleDarkAtom}>{isToggle ? "🌝" : "🌚"}</button> */}
+        <ToggleButton onClick={toggleDarkAtom}>
+          {isToggle ? "🌝" : "🌚"}
+        </ToggleButton>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
