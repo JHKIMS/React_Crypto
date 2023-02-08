@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { isDarkAtom } from "../atoms";
@@ -56,6 +56,20 @@ const Loader = styled.span`
   text-align: center;
   display: block;
 `;
+const ToggleButton = styled.button`
+  position: fixed;
+  z-index: 999999;
+  bottom: 4%;
+  right: 3%;
+  background-color: ${props => props.theme.bgColor};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 96px;
+  height: 48px;
+  border-radius: 30px;
+  font-size: 20px;
+`
 
 interface CoinInterface {
   id: string;
@@ -70,10 +84,14 @@ interface CoinInterface {
 interface ICoinsProps{
 }
 
+interface TogName{
+  name: string;
+}
+
 function Coins({}:ICoinsProps) {
+  const isToggle = useRecoilValue(isDarkAtom);
   const setDarkAtom = useSetRecoilState(isDarkAtom)
   const toggleDarkAtom = () => setDarkAtom(prevToggle=> !prevToggle);
-
   const { isLoading, data } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
   /*   const [coins, setCoins] = useState<CoinInterface[]>([]);
   const [loading, setLoading] = useState(true);
@@ -93,7 +111,10 @@ function Coins({}:ICoinsProps) {
       </Helmet>
       <Header>
         <Title>Crypto Tracker</Title>
-        <button onClick={toggleDarkAtom}>Toggle Mode</button>
+          <button onClick={toggleDarkAtom}>
+              {isToggle ? "🌝":"🌚"}
+          </button>
+          <ToggleButton onClick={toggleDarkAtom} />  
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
