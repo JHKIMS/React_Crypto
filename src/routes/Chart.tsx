@@ -24,60 +24,44 @@ function Chart({ coinId }: ChartProps) {
   const { isLoading, data } = useQuery<IHistorical[]>(["ohlcv", coinId], () =>
     fetchCoinHistory(coinId)
   );
+  let candleData = data ?? [];
+	if ("error" in candleData) {
+		candleData = [];
+	}
   return (
     <div>
       {isLoading ? (
         "Loading Chart..."
       ) : (
         <ApexCharts
-          type="line"
+          type="candlestick"
           series={[
             {
-              name: "Price",
-              data: data?.map((price) => parseFloat(price.close)) ?? [],
+              name: "시세",
+              data: candleData.map((price) => ({
+                x: price.time_close * 1000,
+                y: [price.open, price.high, price.low, price.close],
+              })),
             },
           ]}
+          
           options={{
-            theme: {
-              mode: isDark ? "dark" : "light",
-            },
             chart: {
-              height: 300,
-              width: 500,
-              background: "transparent",
+              type: 'candlestick',
+              height: 350
             },
-            grid: {show: false},
-            stroke: {
-              curve: "smooth",
-              width: 5
+            title: {
+              text: 'CandleStick Chart',
+              align: 'left'
             },
             xaxis: {
-              axisBorder: { show: false },
-              axisTicks: { show: false },
-              labels: { show: false },
-              type: "datetime",
-              categories: data?.map((price) =>
-                new Date(price.time_close * 1000).toISOString()
-              ),
+              type: 'datetime'
             },
             yaxis: {
-              labels: {
-                style: {
-                  fontSize: "15px",
-                  fontWeight: 700,
-                },
-              },
-            },
-            fill: {
-              type: "gradient",
-              gradient: { gradientToColors: ["#44bd32"], stops: [0, 100] },
-            },
-            colors: ["#0984e3"],
-            tooltip: {
-              y: {
-                formatter: (value) => `$${value.toFixed(3)}`,
-              },
-            },
+              tooltip: {
+                enabled: true
+              }
+            }
           }}
         />
       )}
