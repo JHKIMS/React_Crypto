@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
-import { Switch, Route, useLocation, useParams, Link, useRouteMatch } from "react-router-dom";
+import {
+  Switch,
+  Route,
+  useLocation,
+  useParams,
+  Link,
+  useRouteMatch,
+} from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import Chart from "./Chart";
@@ -78,9 +85,7 @@ interface IPriceData {
   };
 }
 
-interface ICoinProps{
-  
-}
+interface ICoinProps {}
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -134,7 +139,7 @@ const Tabs = styled.div`
   gap: 10px;
 `;
 
-const Tab = styled.span<{ isActive: boolean}>`
+const Tab = styled.span<{ isActive: boolean }>`
   text-align: center;
   text-transform: uppercase;
   font-size: 12px;
@@ -142,7 +147,7 @@ const Tab = styled.span<{ isActive: boolean}>`
   background-color: rgba(0, 0, 0, 0.5);
   padding: 7px 0px;
   border-radius: 10px;
-  color: ${(props) => 
+  color: ${(props) =>
     props.isActive ? props.theme.accentColor : props.theme.textColor};
   a {
     display: block;
@@ -153,15 +158,15 @@ const Img = styled.img`
   width: 40px;
   height: 40px;
   margin-right: 10px;
-`
+`;
 const HomeButton = styled(Link)`
   display: flex;
   justify-content: flex-start;
   font-size: 20px;
-  color: ${(props) =>props.theme.accentColor};
-`
+  color: ${(props) => props.theme.accentColor};
+`;
 
-function Coin({}:ICoinProps) {
+function Coin({}: ICoinProps) {
   /*   
   const [loading, setLoading] = useState(true);
   const [info, setInfo] = useState<IInfoData>();
@@ -171,14 +176,17 @@ function Coin({}:ICoinProps) {
   const { state } = useLocation<RouteState>(); // useLocation : ReactRouterDom이 보내주는 것
   const priceMatch = useRouteMatch("/:coinId/price");
   const chartMatch = useRouteMatch("/:coinId/chart");
-  const {isLoading: infoLoading ,data:infoData} = useQuery<IInfoData>(["info",coinId], () => fetchCoinInfo(coinId))
-  const {isLoading: tickersLoading, data:tickersData} = useQuery<IPriceData>(
-    ["tickers",coinId], 
+  const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>(
+    ["info", coinId],
+    () => fetchCoinInfo(coinId)
+  );
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<IPriceData>(
+    ["tickers", coinId],
     () => fetchCoinTickers(coinId),
     {
-      refetchInterval:  5000,
+      refetchInterval: 5000,
     }
-    )
+  );
 
   // useEffect(() => {
   //   (async () => {
@@ -187,7 +195,7 @@ function Coin({}:ICoinProps) {
   //     ).json();
   //     // console.log(infoData);
   //     /* const response = await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-  //       const json = await response.json() 
+  //       const json = await response.json()
   //       위의 코드와 동일하다.*/
   //     const priceData = await (
   //       await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
@@ -198,8 +206,8 @@ function Coin({}:ICoinProps) {
   //     // console.log(priceData);
   //   })();
   // }, [coinId]);
-  
-  const loading = infoLoading || tickersLoading
+
+  const loading = infoLoading || tickersLoading;
   return (
     <Container>
       <Helmet>
@@ -207,11 +215,14 @@ function Coin({}:ICoinProps) {
           {state?.name ? state.name : loading ? "Loading....." : infoData?.name}
         </title>
       </Helmet>
-      <HomeButton to={'/'}>🏠HOME</HomeButton>
+      <HomeButton to={"/"}>🏠HOME</HomeButton>
       <Header>
         <Title>
-        <Img src={`https://coinicons-api.vercel.app/api/icon/${state?.icon}`}/>
+          <Img
+            src={`https://coinicons-api.vercel.app/api/icon/${state?.icon}`}
+          />
           {state?.name ? state.name : loading ? "Loading....." : infoData?.name}
+          
         </Title>
       </Header>
       {loading ? (
@@ -229,7 +240,7 @@ function Coin({}:ICoinProps) {
             </OverviewItem>
             <OverviewItem>
               <span>Price:</span>
-              <span>{tickersData?.quotes.USD.price.toFixed(2)}</span>
+              <span>$ {tickersData?.quotes.USD.price.toFixed(2)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
@@ -255,7 +266,13 @@ function Coin({}:ICoinProps) {
 
           <Switch>
             <Route path={`/:coinId/price`}>
-              <Price />
+              <Price
+                  percent1h={tickersData?.quotes.USD.percent_change_1h}
+                  percent12h={tickersData?.quotes.USD.percent_change_12h}
+                  percent24h={tickersData?.quotes.USD.percent_change_24h}
+                  percent7d={tickersData?.quotes.USD.percent_change_7d}
+                  percent30d={tickersData?.quotes.USD.percent_change_30d}
+              />
             </Route>
             <Route path={`/${coinId}/chart`}>
               <Chart coinId={coinId} />
