@@ -31,9 +31,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "deploy": "gh-pages -d build",
-    "predeploy": "npm run build"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -57,6 +55,5 @@
     "@types/react-helmet": "^6.1.6",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.26"
-  },
-  "homepage": "https://JHKIMS.github.io/React_Crypto"
+  }
 }
